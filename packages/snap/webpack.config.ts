@@ -20,7 +20,7 @@ const common: Configuration = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
-    fallback: { stream: false },
+    fallback: { stream: false, fs: false, crypto: false, path: false, os: false, zlib: false, http: false, http2:false, net: false, tls: false, dns:false },
   },
   module: {
     rules: [
