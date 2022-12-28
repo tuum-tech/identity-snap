@@ -3230,7 +3230,6 @@ __metadata:
     "@metamask/eslint-config-typescript": ^10.0.0
     "@typescript-eslint/eslint-plugin": ^5.33.0
     "@typescript-eslint/parser": ^5.33.0
-    caip: ^1.1.0
     eslint: ^8.21.0
     eslint-config-prettier: ^8.1.0
     eslint-plugin-import: ^2.26.0
@@ -4662,17 +4661,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tuum-tech/did-provider-pkh@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@tuum-tech/did-provider-pkh@npm:4.0.0"
+"@tuum-tech/did-provider-pkh@npm:4.0.4":
+  version: 4.0.4
+  resolution: "@tuum-tech/did-provider-pkh@npm:4.0.4"
   dependencies:
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/signing-key": ^5.7.0
     "@ethersproject/transactions": ^5.7.0
+    "@hashgraph/sdk": ^2.18.6
     "@veramo/core": ^4.0.0
     "@veramo/did-manager": ^4.0.0
     debug: ^4.3.3
-  checksum: 72d0fe39bfa73b0803a5595110f233743e837a57a902f30ab1c9014aae9290fbb68ac0b42032f5c1038f453516a6efc47e2512b5c25576388f777ba161f6d7a5
+  checksum: 7eded6e2770d5dcd03736631d24d76ffae0b9c7479a93122b949e558fd7eefe9759bb23ffe2c83d3dc90c216976950cdf1c21c9ef75c0735c649fa82eee778ab
   languageName: node
   linkType: hard
 
@@ -4698,7 +4698,7 @@ __metadata:
     "@metamask/snap-types": ^0.22.0
     "@metamask/snaps-cli": ^0.22.0
     "@metamask/snaps-webpack-plugin": ^0.23.0
-    "@tuum-tech/did-provider-pkh": ^4.0.0
+    "@tuum-tech/did-provider-pkh": 4.0.4
     "@types/jest": ^29.2.2
     "@types/lodash.clonedeep": ^4.5.7
     "@types/uuid": ^9.0.0
@@ -4716,6 +4716,7 @@ __metadata:
     "@veramo/selective-disclosure": ^4.1.1
     babel-loader: ^9.1.0
     bignumber.js: ^9.1.0
+    caip: ^1.1.0
     did-resolver: ^4.0.1
     eslint: ^8.21.0
     eslint-config-prettier: ^8.1.0
