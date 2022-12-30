@@ -127,6 +127,23 @@ export const getDID = async () => {
   });
 };
 
+
+/**
+ * Invoke the "getDID" method from the snap.
+ */
+
+export const getDIDHedera = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'getDIDHedera',
+      },
+    ],
+  });
+};
+
 /**
  * Invoke the "getVCs" method from the snap.
  */

@@ -5,7 +5,7 @@ import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
+  SendHelloButton
 } from '../components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
@@ -13,10 +13,11 @@ import {
   connectSnap,
   getCurrentDIDMethod,
   getDID,
+  getDIDHedera,
   getSnap,
   getVCs,
   sendHello,
-  shouldDisplayReconnectButton,
+  shouldDisplayReconnectButton
 } from '../utils';
 
 const Container = styled.div`
@@ -177,6 +178,17 @@ const Index = () => {
     }
   };
 
+   const handleGetDIDHederaClick = async () => {
+    try {
+      const did = await getDIDHedera();
+      console.log(`Your DID is: ${did}`);
+      alert(`Your DID is: ${did}`);
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
   const handleGetVCsClick = async () => {
     try {
       const vcs = await getVCs();
@@ -328,6 +340,24 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleGetDIDClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+         <Card
+          content={{
+            title: 'getDIDHedera',
+            description: 'Get the current DID of the user',
+            button: (
+              <SendHelloButton
+                onClick={handleGetDIDHederaClick}
                 disabled={!state.installedSnap}
               />
             ),

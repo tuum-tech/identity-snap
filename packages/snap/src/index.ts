@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { getAvailableMethods } from './rpc/did/getAvailableMethods';
-import { getDid } from './rpc/did/getDID';
+import { getDid, getDidHedera } from './rpc/did/getDID';
 import { switchMethod } from './rpc/did/switchMethods';
 import { configureHederaAccount } from './rpc/hedera/configureAccount';
 import { getVCs } from './rpc/vc/getVCs';
@@ -10,7 +10,7 @@ import { switchNetworkIfNecessary } from './utils/network';
 import {
   isValidGetVCsRequest,
   isValidHederaAccountParams,
-  isValidSwitchMethodRequest,
+  isValidSwitchMethodRequest
 } from './utils/params';
 import { getCurrentAccount } from './utils/snapUtils';
 import { getSnapStateUnchecked, initAccountState } from './utils/stateUtils';
@@ -101,6 +101,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     case 'getDID':
       await switchNetworkIfNecessary(wallet, state);
       return await getDid(wallet, state);
+    case 'getDIDHedera':
+      await switchNetworkIfNecessary(wallet, state);
+      //return "1" 
+      return await getDidHedera(wallet, state);
     case 'getVCs':
       isValidGetVCsRequest(request.params);
       return await getVCs(wallet, state, request.params.query);

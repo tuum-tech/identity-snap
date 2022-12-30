@@ -29,6 +29,17 @@ bundleString = bundleString.replace(
   ''
 );
 
+bundleString = bundleString.replace("const verbosityString = (_b = (_a = process.env.GRPC_NODE_VERBOSITY) !== null && _a !== void 0 ? _a : process.env.GRPC_VERBOSITY) !== null && _b !== void 0 ? _b : '';", "const verbosityString = 'INFO'");
+
+bundleString = bundleString.replace("const tracersString = (_d = (_c = process.env.GRPC_NODE_TRACE) !== null && _c !== void 0 ? _c : process.env.GRPC_TRACE) !== null && _d !== void 0 ? _d : '';", "const tracersString =''");
+
+
+bundleString = bundleString.replace("!process.browser && process.env.READABLE_STREAM === 'disable'", "true");
+bundleString = bundleString.replace("var logData = Boolean(process.env.HTTP2_LOG_DATA);", "var logData = true;");
+
+
+bundleString = bundleString.replace("|| process.nextTick", "");
+
 // Fix TextEncoder and TextDecoder
 bundleString = bundleString.replace(
   'const textEncoder = new TextEncoder();',

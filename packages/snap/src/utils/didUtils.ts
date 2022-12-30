@@ -1,5 +1,6 @@
 import { SnapProvider } from '@metamask/snap-types';
 import { IdentitySnapState } from '../interfaces';
+import { getAgent } from '../veramo/setup';
 import { getHederaChainIDs } from './config';
 import { isHederaAccountImported } from './params';
 import { getCurrentNetwork } from './snapUtils';
@@ -37,4 +38,34 @@ export async function getCurrentDid(
     );
   }
   return did;
+}
+
+/* eslint-disable */
+export async function getCurrentDidDocument(
+  wallet: SnapProvider,
+  state: IdentitySnapState
+): Promise<string> {
+  let did: string = '';
+  const method =
+    state.accountState[state.currentAccount].accountConfig.identity.didMethod;
+  const chain_id = await getCurrentNetwork(wallet);
+  const hederaChainIDs = getHederaChainIDs();
+
+   const agent = await getAgent(wallet, state);
+   
+
+
+
+  //if (method === 'did:pkh') {
+   
+      // Handle Hedera
+      let pk = "2386d1d21644dc65d4e4b9e2242c5f155cab174916cbc46ad85622cdaeac835c";
+      let pkhHederaIdentifier = await agent.didManagerCreate({ kms: 'snap', provider: "did:pkh", 
+        options: { network: 'hedera', chainId: "testnet", hederaAccountId: "0.0.48865029", privateKey: pk } });
+
+
+      return pkhHederaIdentifier.did;
+
+    
+  
 }
