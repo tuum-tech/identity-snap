@@ -1,3 +1,4 @@
+import { VerifiableCredential } from '@veramo/core';
 import { defaultSnapOrigin } from '../config';
 import { GetSnapsResponse, Snap } from '../types';
 
@@ -148,7 +149,7 @@ export const getDIDHedera = async () => {
  * Invoke the "getVCs" method from the snap.
  */
 
-export const getVCs = async (snapId: string = defaultSnapOrigin) => {
+export const getVCs = async () => {
   return await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: [
@@ -160,5 +161,74 @@ export const getVCs = async (snapId: string = defaultSnapOrigin) => {
     ],
   });
 };
+
+/**
+ * Invoke the "saveVC" method from the snap.
+ */
+
+export const saveVC = async (vc: VerifiableCredential) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'saveVC',
+        params: { verifiableCredential: vc },
+      },
+    ],
+  });
+};
+
+export type ExampleVCValue = {
+  name: string;
+  value: string;
+};
+
+/**
+ * Invoke the "createExampleVC" method from the snap.
+ */
+
+export const createExampleVC = async (name: string, value: string) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'createExampleVC',
+        params: {
+          exampleVCData: {
+            name,
+            value,
+          },
+        },
+      },
+    ],
+  });
+};
+
+/**
+ * Invoke the "getVP" method from the snap.
+ */
+
+export const getVP = async (vcId: string, challenge?: boolean) => {
+  if (!challenge) {
+    return await window.ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: [defaultSnapOrigin, {
+        method: 'getVP',
+        params: { vcId: vcId }
+      }]
+    })
+  }
+  else {
+    return await window.ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: [defaultSnapOrigin, {
+        method: 'getVP',
+        params: { vcId: vcId, challenge: "ab31aeae-3471-406b-b890-6389767c4cce" }
+      }]
+    })
+  }
+}
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

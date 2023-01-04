@@ -11,11 +11,13 @@ import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   configureHederaAccount,
   connectSnap,
+  createExampleVC,
   getCurrentDIDMethod,
   getDID,
   getDIDHedera,
   getSnap,
   getVCs,
+  getVP,
   sendHello,
   shouldDisplayReconnectButton
 } from '../utils';
@@ -112,6 +114,11 @@ const Index = () => {
     '2386d1d21644dc65d4e4b9e2242c5f155cab174916cbc46ad85622cdaeac835c'
   );
   const [hederaAccountId, setHederaAccountId] = useState('0.0.48865029');
+  const [createExampleVCName, setCreateExampleVCName] =
+    useState('Tuum Identity Snap');
+  const [createExampleVCValue, setCreateExampleVCValue] =
+    useState('Example VC');
+  const [vcId, setVcId] = useState('');
 
   const handleConnectClick = async () => {
     try {
@@ -192,8 +199,37 @@ const Index = () => {
   const handleGetVCsClick = async () => {
     try {
       const vcs = await getVCs();
-      console.log(`Your VC Store is: ${vcs}`);
-      // alert(`Your DID is: ${did}`);
+      console.log(`Your VCs are: ${JSON.stringify(vcs, null, 4)}`);
+      const vcsJson = JSON.parse(JSON.stringify(vcs))
+      const keys = vcsJson.map((vc: { key: any; }) => vc.key)
+      if (keys) {
+        setVcId(keys[keys.length - 1])
+      }
+      alert(`Your VC IDs are: ${keys}`);
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleCreateExampleVCClick = async () => {
+    try {
+      const saved = await createExampleVC(
+        createExampleVCName,
+        createExampleVCValue
+      );
+      console.log('created and saved VC: ', saved);
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleGetVPClick = async () => {
+    try {
+      const vp = await getVP(vcId);
+      console.log(`Your VP is: ${JSON.stringify(vp, null, 4)}`);
+      alert(`Your VP is: ${JSON.stringify(vp, null, 4)}`);
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -376,6 +412,75 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleGetVCsClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+        <Card
+          content={{
+            title: 'createExampleVC',
+            description: 'Create and Save VerifiableCredential',
+            form: (
+              <form>
+                <label>
+                  Enter name of your VC
+                  <input
+                    type="text"
+                    value={createExampleVCName}
+                    onChange={(e) => setCreateExampleVCName(e.target.value)}
+                  />
+                </label>
+                <br />
+                <label>
+                  Enter value of your VC
+                  <input
+                    type="text"
+                    value={createExampleVCValue}
+                    onChange={(e) => setCreateExampleVCValue(e.target.value)}
+                  />
+                </label>
+              </form>
+            ),
+            button: (
+              <SendHelloButton
+                onClick={handleCreateExampleVCClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+        <Card
+          content={{
+            title: 'getVP',
+            description: 'Generate Verifiable Presentation from your VC',
+            form: (
+              <form>
+                <label>
+                  Enter the Verifiable Credential ID
+                  <input
+                    type="text"
+                    value={vcId}
+                    onChange={(e) => setVcId(e.target.value)}
+                  />
+                </label>
+              </form>
+            ),
+            button: (
+              <SendHelloButton
+                onClick={handleGetVPClick}
                 disabled={!state.installedSnap}
               />
             ),

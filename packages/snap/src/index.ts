@@ -4,12 +4,18 @@ import { getAvailableMethods } from './rpc/did/getAvailableMethods';
 import { getDid, getDidHedera } from './rpc/did/getDID';
 import { switchMethod } from './rpc/did/switchMethods';
 import { configureHederaAccount } from './rpc/hedera/configureAccount';
+import { createExampleVC } from './rpc/vc/createExampleVC';
 import { getVCs } from './rpc/vc/getVCs';
+import { getVP } from './rpc/vc/getVP';
+import { saveVC } from './rpc/vc/saveVC';
 import { init } from './utils/init';
 import { switchNetworkIfNecessary } from './utils/network';
 import {
+  isValidCreateExampleVCRequest,
   isValidGetVCsRequest,
+  isValidGetVPRequest,
   isValidHederaAccountParams,
+  isValidSaveVCRequest,
   isValidSwitchMethodRequest
 } from './utils/params';
 import { getCurrentAccount } from './utils/snapUtils';
@@ -45,7 +51,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   if (state === null) {
     state = await init(wallet);
   }
-  console.log('state:', JSON.stringify(state));
+  console.log('state:', JSON.stringify(state, null, 4));
 
   /* 
     We will need to call this API before trying to get the account because sometimes when connecting to hedera,
@@ -77,7 +83,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     await initAccountState(wallet, state);
   }
 
-  console.log('Request:', JSON.stringify(request));
+  console.log('Request:', JSON.stringify(request, null, 4));
   console.log('Origin:', origin);
   console.log('-------------------------------------------------------------');
   console.log('request.params=========', request.params);
@@ -107,7 +113,26 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       return await getDidHedera(wallet, state);
     case 'getVCs':
       isValidGetVCsRequest(request.params);
+      await switchNetworkIfNecessary(wallet, state);
       return await getVCs(wallet, state, request.params.query);
+    case 'saveVC':
+      isValidSaveVCRequest(request.params);
+      await switchNetworkIfNecessary(wallet, state);
+      return await saveVC(wallet, state, request.params.verifiableCredential);
+    case 'createExampleVC':
+      isValidCreateExampleVCRequest(request.params);
+      await switchNetworkIfNecessary(wallet, state);
+      return await createExampleVC(wallet, state, request.params.exampleVCData);
+    case 'getVP':
+      isValidGetVPRequest(request.params);
+      await switchNetworkIfNecessary(wallet, state);
+      return await getVP(
+        wallet,
+        state,
+        request.params.vcId,
+        request.params.domain,
+        request.params.challenge
+      );
     case 'getCurrentDIDMethod':
       await switchNetworkIfNecessary(wallet, state);
       return state.accountState[state.currentAccount].accountConfig.identity
