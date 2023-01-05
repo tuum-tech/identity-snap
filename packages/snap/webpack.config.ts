@@ -21,9 +21,12 @@ const common: Configuration = {
   resolve: {
     extensions: ['.ts', '.js'],
     fallback: { 
-      "https": require.resolve("https-browserify"), 
-      "stream": require.resolve("stream-browserify"),
-      "fs": require.resolve("browserify-fs"), 
+      // "https": require.resolve("https-browserify"), 
+      // "stream": require.resolve("stream-browserify"),
+      // "fs": require.resolve("browserify-fs"), 
+      "https": false, 
+      "stream": false,
+      "fs": false, 
       crypto: false, path: false, os: false, zlib: false, http: false, net: false, tls: false, dns:false },
   },
   module: {
