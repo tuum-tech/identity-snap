@@ -5,7 +5,7 @@ import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton
+  SendHelloButton,
 } from '../components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
@@ -18,8 +18,9 @@ import {
   getSnap,
   getVCs,
   getVP,
+  resolveDID,
   sendHello,
-  shouldDisplayReconnectButton
+  shouldDisplayReconnectButton,
 } from '../utils';
 
 const Container = styled.div`
@@ -196,14 +197,25 @@ const Index = () => {
     }
   };
 
+  const handleResolveDIDClick = async () => {
+    try {
+      const doc = await resolveDID();
+      console.log(`Your DID document is is: ${JSON.stringify(doc, null, 4)}`);
+      alert(`Your DID document is: ${JSON.stringify(doc, null, 4)}`);
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
   const handleGetVCsClick = async () => {
     try {
       const vcs = await getVCs();
       console.log(`Your VCs are: ${JSON.stringify(vcs, null, 4)}`);
-      const vcsJson = JSON.parse(JSON.stringify(vcs))
-      const keys = vcsJson.map((vc: { key: any; }) => vc.key)
+      const vcsJson = JSON.parse(JSON.stringify(vcs));
+      const keys = vcsJson.map((vc: { key: any }) => vc.key);
       if (keys) {
-        setVcId(keys[keys.length - 1])
+        setVcId(keys[keys.length - 1]);
       }
       alert(`Your VC IDs are: ${keys}`);
     } catch (e) {
@@ -239,7 +251,7 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>Identity Snap</Span>
       </Heading>
       <Subtitle>
         Get started by editing <code>src/index.ts</code>
@@ -394,6 +406,24 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleGetDIDHederaClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+        <Card
+          content={{
+            title: 'resolveDID',
+            description: 'Resolve the DID and return a DID document',
+            button: (
+              <SendHelloButton
+                onClick={handleResolveDIDClick}
                 disabled={!state.installedSnap}
               />
             ),
